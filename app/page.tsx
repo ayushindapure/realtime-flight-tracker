@@ -1,16 +1,16 @@
 "use client";
 
-import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useState } from "react";
+import { useState } from "react";
 
 export default function Home() {
   const [flightIata, setFlightIata] = useState("");
   const [flightData, setFlightData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null)
 
   const fetchFlightData = async () => {
     setLoading(true);
-    // setError(null);
+    setError(null);
     try {
       const response = await fetch(
         `https://api.aviationstack.com/v1/flights?access_key=0589891dd972e89180fc3b8295a45132&flight_iata=${flightIata}`
@@ -20,10 +20,10 @@ export default function Home() {
         setFlightData(data.data);
       } else {
         setFlightData(null);
-        Error("No flight data found");
+        setError("No flight data found" as unknown as null);
       }
     } catch (err) {
-      Error("Failed to fetch flight data");
+      setError("No flight data found" as unknown as null);
     }
     setLoading(false);
   };
@@ -52,7 +52,7 @@ export default function Home() {
         <div className="mt-6 bg-neutral-800 p-6 rounded-md w-full max-w-md">
           <h2 className="text-xl font-semibold">Flight Details</h2>
           <ul className="mt-2">
-            {flightData.map((flight: { flight: { iata: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }; airline: { name: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }; flight_status: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; departure: { airport: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; scheduled: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }; arrival: { airport: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; scheduled: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }; }, index: Key | null | undefined) => (
+            {flightData.map((flight, index) => (
               <li key={index} className="border-b py-2">
                 <p><strong>Flight:</strong> {flight.flight.iata}</p>
                 <p><strong>Airline:</strong> {flight.airline.name}</p>
